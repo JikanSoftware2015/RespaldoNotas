@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Respaldar Notas a blocdenotas_backup.db</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+        textarea { width: 100%; height: 300px; padding: 10px; font-size: 16px; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<h2>Generar respaldo SQLite (.db)</h2>
+<p>Pega aquí tus notas, separadas por tres guiones <code>---</code> para dividir cada una:</p>
+
+<textarea id="notas" placeholder="Nota 1... --- Nota 2... --- Nota 3..."></textarea>
+
+<br>
+<button onclick="generarRespaldo()">Descargar blocdenotas_backup.db</button>
+
+<script src="https://sql.js.org/dist/sql-wasm.js"></script>
+<script>
+async function generarRespaldo() {
+    const contenido = document.getElementById('notas').value.trim();
+    if (!contenido) {
+        alert("Debes ingresar al menos una nota.");
+        return;
+    }
+
+    const notasArray = contenido.split('---').map(s => s.trim()).filter(s => s.length);
+
+    if (notasArray.length === 0) {
+        alert("Formato incorrecto. Separa cada nota con ---");
+        return;
+    }
+
+    const SQL = await initSqlJs({ locateFile: file => `https://sql.js.org/dist/${file}` });
+    const db = new SQL.Database();
+
+    // Crear tabla notes
+    db.run("CREATE TABLE notes (title TEXT, body TEXT, updated_at INTEGER);");
+
+    const now = Date.now();
+
+    // Insertar notas
+    notasArray.forEach((texto, i) => {
+        db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [
+            `Nota importada ${i+1}`,
+            texto,
+            now + i
+        ]);
+    });
+
+    // Exportar base
+    const binaryArray = db.export();
+    const blob = new Blob([binaryArray], { type: 'application/octet-stream' });
+    const enlace = document.createElement('a');
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = 'blocdenotas_backup.db';
+    enlace.click();
+}
+</script>
+
+</body>
+</html>
