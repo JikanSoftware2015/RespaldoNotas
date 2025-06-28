@@ -5,64 +5,66 @@
   <title>Respaldar Notas a blocdenotas_backup.db</title>
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-    textarea { width: 100%; height: 400px; padding: 10px; font-size: 16px; }
-    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    input, textarea { width: 100%; padding: 8px; margin: 5px 0 15px; font-size: 15px; }
+    button { margin: 10px 0; padding: 10px 20px; font-size: 16px; }
+    .nota { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; background: #fff; border-radius: 8px; }
   </style>
 </head>
 <body>
 
-<h2>Generar respaldo SQLite (.db)</h2>
-<p>Pega aquí tus notas en este formato:</p>
+<h2>Generar respaldo blocdenotas_backup.db</h2>
+<p>Completa tus notas aquí. Puedes agregar hasta 500 notas.</p>
 
-<pre>
-Título: Mi nota 1
-Contenido: Aquí mi texto
+<div id="contenedorNotas"></div>
 
----
-Título: Mi nota 2
-Contenido: Otro texto
-
----
-</pre>
-
-<textarea id="notas" placeholder="Pega aquí tus notas..."></textarea>
-
+<button onclick="agregarNota()">+ Agregar otra nota</button>
 <br>
 <button onclick="generarRespaldo()">Descargar blocdenotas_backup.db</button>
 
 <script src="https://sql.js.org/dist/sql-wasm.js"></script>
 <script>
+let contadorNotas = 0;
+const LIMITE_NOTAS = 500;
+
+function agregarNota() {
+  if (contadorNotas >= LIMITE_NOTAS) {
+    alert("Has alcanzado el límite de 500 notas.");
+    return;
+  }
+
+  contadorNotas++;
+  const div = document.createElement('div');
+  div.className = 'nota';
+  div.innerHTML = `
+    <h3>Nota ${contadorNotas}</h3>
+    <input type="text" placeholder="Título de la nota" id="titulo${contadorNotas}">
+    <textarea placeholder="Contenido de la nota" rows="4" id="contenido${contadorNotas}"></textarea>
+  `;
+  document.getElementById('contenedorNotas').appendChild(div);
+}
+
 async function generarRespaldo() {
-  const contenido = document.getElementById('notas').value.trim();
-  if (!contenido) {
-    alert("Debes ingresar al menos una nota.");
-    return;
-  }
-
-  const notasArray = contenido.split('---').map(s => s.trim()).filter(s => s.length);
-  if (notasArray.length === 0) {
-    alert("Formato incorrecto. Separa cada nota con ---");
-    return;
-  }
-
   const SQL = await initSqlJs({ locateFile: file => `https://sql.js.org/dist/${file}` });
   const db = new SQL.Database();
   db.run("CREATE TABLE notes (title TEXT, body TEXT, updated_at INTEGER);");
 
   const now = Date.now();
+  let notasInsertadas = 0;
 
-  notasArray.forEach((notaTexto, i) => {
-    let title = `Nota importada ${i+1}`;
-    let body = notaTexto;
+  for (let i = 1; i <= contadorNotas; i++) {
+    const titulo = document.getElementById(`titulo${i}`)?.value.trim();
+    const contenido = document.getElementById(`contenido${i}`)?.value.trim();
 
-    const titleMatch = notaTexto.match(/Título:\s*(.+)/i);
-    const contentMatch = notaTexto.match(/Contenido:\s*([\s\S]*)/i);
+    if (titulo && contenido) {
+      db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [titulo, contenido, now + i]);
+      notasInsertadas++;
+    }
+  }
 
-    if (titleMatch) title = titleMatch[1].trim();
-    if (contentMatch) body = contentMatch[1].trim();
-
-    db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [title, body, now + i]);
-  });
+  if (notasInsertadas === 0) {
+    alert("Debes ingresar al menos una nota con título y contenido.");
+    return;
+  }
 
   const binaryArray = db.export();
   const blob = new Blob([binaryArray], { type: 'application/octet-stream' });
@@ -71,6 +73,10 @@ async function generarRespaldo() {
   enlace.download = 'blocdenotas_backup.db';
   enlace.click();
 }
+</script>
+
+<script>
+agregarNota();
 </script>
 
 </body>
