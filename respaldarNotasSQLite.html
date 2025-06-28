@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Respaldar Notas a blocdenotas_backup.db</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-    input, textarea { width: 100%; padding: 8px; margin: 5px 0 15px; font-size: 15px; }
-    button { margin: 10px 0; padding: 10px 20px; font-size: 16px; }
-    .nota { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; background: #fff; border-radius: 8px; }
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; max-width: 800px; margin: auto; }
+    input, textarea { width: 100%; padding: 14px; margin: 8px 0 18px; font-size: 18px; border-radius: 6px; border: 1px solid #ccc; }
+    button { display: block; width: 100%; margin: 12px 0; padding: 14px; font-size: 18px; border: none; background: #0066cc; color: #fff; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #004999; }
+    .nota { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #fff; border-radius: 10px; }
+    h2 { font-size: 26px; margin-bottom: 20px; }
+    h3 { font-size: 22px; margin: 0 0 15px 0; }
+    p { font-size: 18px; margin-bottom: 20px; }
   </style>
 </head>
 <body>
@@ -18,8 +23,7 @@
 <div id="contenedorNotas"></div>
 
 <button onclick="agregarNota()">+ Agregar otra nota</button>
-<br>
-<button onclick="generarRespaldo()">Descargar respaldo_blocdenotas.db</button>
+<button onclick="generarRespaldo()">📥 Descargar respaldo_blocdenotas.db</button>
 
 <script src="https://sql.js.org/dist/sql-wasm.js"></script>
 <script>
@@ -55,15 +59,17 @@ async function generarRespaldo() {
     const tituloInput = document.getElementById(`titulo${i}`);
     const contenidoInput = document.getElementById(`contenido${i}`);
 
-    if (!contenidoInput) continue;
+    if (!contenidoInput || !contenidoInput.value.trim()) continue;
 
-    const titulo = tituloInput?.value.trim() || "Sin título";
+    let titulo = "Sin título";
+    if (tituloInput && tituloInput.value.trim()) {
+      titulo = tituloInput.value.trim();
+    }
+
     const contenido = contenidoInput.value.trim();
 
-    if (contenido) {
-      db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [titulo, contenido, now + i]);
-      notasInsertadas++;
-    }
+    db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [titulo, contenido, now + i]);
+    notasInsertadas++;
   }
 
   if (notasInsertadas === 0) {
