@@ -19,7 +19,7 @@
 
 <button onclick="agregarNota()">+ Agregar otra nota</button>
 <br>
-<button onclick="generarRespaldo()">Descargar blocdenotas_backup.db</button>
+<button onclick="generarRespaldo()">Descargar respaldo_blocdenotas.db</button>
 
 <script src="https://sql.js.org/dist/sql-wasm.js"></script>
 <script>
@@ -52,17 +52,22 @@ async function generarRespaldo() {
   let notasInsertadas = 0;
 
   for (let i = 1; i <= contadorNotas; i++) {
-    const titulo = document.getElementById(`titulo${i}`)?.value.trim();
-    const contenido = document.getElementById(`contenido${i}`)?.value.trim();
+    const tituloInput = document.getElementById(`titulo${i}`);
+    const contenidoInput = document.getElementById(`contenido${i}`);
 
-    if (titulo && contenido) {
+    if (!contenidoInput) continue;
+
+    const titulo = tituloInput?.value.trim() || "Sin título";
+    const contenido = contenidoInput.value.trim();
+
+    if (contenido) {
       db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [titulo, contenido, now + i]);
       notasInsertadas++;
     }
   }
 
   if (notasInsertadas === 0) {
-    alert("Debes ingresar al menos una nota con título y contenido.");
+    alert("Debes ingresar al menos una nota con contenido.");
     return;
   }
 
@@ -70,12 +75,10 @@ async function generarRespaldo() {
   const blob = new Blob([binaryArray], { type: 'application/octet-stream' });
   const enlace = document.createElement('a');
   enlace.href = URL.createObjectURL(blob);
-  enlace.download = 'blocdenotas_backup.db';
+  enlace.download = 'respaldo_blocdenotas.db';
   enlace.click();
 }
-</script>
 
-<script>
 agregarNota();
 </script>
 
