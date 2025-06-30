@@ -13,27 +13,42 @@
     h2 { font-size: 26px; margin-bottom: 20px; }
     h3 { font-size: 22px; margin: 0 0 15px 0; }
     p { font-size: 18px; margin-bottom: 20px; }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-<h2>Generar respaldo blocdenotas_backup.db</h2>
-<p>
-  🙏 Hola. Antes que nada, quiero pedirte una disculpa por este proceso. Tras el robo del código original de la aplicación, me he esforzado en crear una nueva versión para que nadie pierda sus notas.
-  <br><br>
-  Esta herramienta es una solución temporal para que puedas respaldar manualmente tus notas. Solo tendrás que hacerlo una vez y luego podrás restaurarlas en la nueva versión de la app.
-  <br><br>
-  Por favor, copia cada una de tus notas desde la app antigua, pega aquí el título y el contenido, y repite usando el botón <strong>+ Agregar otra nota</strong>.
-  <br><br>
-  Cuando termines, toca en <strong>📥 Descargar respaldo_blocdenotas.db</strong> para guardar tu respaldo, y luego desde la nueva app podrás restaurarlo desde el botón de Restaurar notas antiguas.
-  <br><br>
-  Gracias por tu comprensión y confianza. 🙏💙 Estoy trabajando para que esto no vuelva a pasar.
+<p style="text-align:center; margin-bottom:20px;">
+  📖 <a href="instrucciones_respaldo.html" style="font-size:18px;">📑 Ver instrucciones paso a paso</a>
 </p>
+
+<h2>Generar respaldo blocdenotas_backup.db</h2>
+
+<p>🙏 Hola. Antes que nada, quiero pedirte una disculpa por este proceso. Tras el robo del código original de la aplicación, me he esforzado en crear una nueva versión para que nadie pierda sus notas.
+<br><br>
+Esta herramienta es una solución temporal para que puedas respaldar manualmente tus notas. Solo tendrás que hacerlo una vez y luego podrás restaurarlas en la nueva versión de la app.
+<br><br>
+Por favor, copia cada una de tus notas desde la app antigua, pega aquí el título y el contenido, y repite usando el botón <strong>+ Agregar otra nota</strong>.
+<br><br>
+Cuando termines, toca en <strong>📥 Descargar respaldo_blocdenotas.db</strong> para guardar tu respaldo, y luego desde la nueva app podrás restaurarlo desde la opción de restaurar base antigua.
+<br><br>
+Gracias por tu comprensión y confianza 🙏💙.</p>
 
 <div id="contenedorNotas"></div>
 
 <button onclick="agregarNota()">+ Agregar otra nota</button>
 <button onclick="generarRespaldo()">📥 Descargar respaldo_blocdenotas.db</button>
+
+<p style="text-align:center; font-size:18px; margin-top:30px;">
+  📢 <strong>Importante:</strong> Si en la versión de tu aplicación actual no has podido respaldar tus notas, es fundamental que utilices este formulario cuanto antes para guardarlas en un archivo.
+  <br><br>
+  Una vez descargado el respaldo en tu teléfono 📱, podrás actualizar a la nueva versión de la app desde nuestro enlace especial.
+  <br><br>
+  👉 <a href="https://sites.google.com/view/jikansoftware/urgente" target="_blank" style="font-weight:bold;">Actualizar a la nueva versión desde Google Play</a>
+  <br><br>
+  📌 Por favor, realiza este proceso antes de actualizar, para que no pierdas ninguna nota importante.
+</p>
 
 <script src="https://sql.js.org/dist/sql-wasm.js"></script>
 <script>
