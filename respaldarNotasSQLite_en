@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Backup Notes to blocdenotas_backup.db</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; max-width: 800px; margin: auto; }
+    input, textarea { width: 100%; padding: 14px; margin: 8px 0 18px; font-size: 18px; border-radius: 6px; border: 1px solid #ccc; }
+    button { display: block; width: 100%; margin: 12px 0; padding: 14px; font-size: 18px; border: none; background: #0066cc; color: #fff; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #004999; }
+    .nota { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #fff; border-radius: 10px; }
+    h2 { font-size: 26px; margin-bottom: 20px; }
+    h3 { font-size: 22px; margin: 0 0 15px 0; }
+    p { font-size: 18px; margin-bottom: 20px; }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<p style="text-align:center; margin-bottom:20px;">
+  🇪🇸 <a href="respaldarNotasSQLite.html" style="font-size:18px;">Ver versión en Español</a>
+</p>
+
+<h2>Generate blocdenotas_backup.db</h2>
+
+<p>🙏 Hello! First, I sincerely apologize for this process. After the theft of the original app’s code, I’ve worked hard to create a new version so no one loses their notes.
+<br><br>
+This tool is a temporary solution for you to manually back up your notes. You’ll only need to do this once and then restore them in the new app.
+<br><br>
+Please copy each note from your old app, paste the title and content here, and use the <strong>+ Add another note</strong> button to add more.
+<br><br>
+When you’re done, click <strong>📥 Download respaldo_blocdenotas.db</strong> to save your backup, and later use the “restore old database” option in the new app to recover them.
+<br><br>
+Thank you so much for your trust and understanding 🙏💙.</p>
+
+<div id="contenedorNotas"></div>
+
+<button onclick="agregarNota()">+ Add another note</button>
+<button onclick="generarRespaldo()">📥 Download respaldo_blocdenotas.db</button>
+
+<p style="text-align:center; font-size:18px; margin-top:30px;">
+  📢 <strong>Important:</strong> If you couldn’t back up your notes in the current app version, it’s crucial you use this tool as soon as possible to save them in a file.
+  <br><br>
+  After downloading the backup file to your phone 📱, you can update to the new app version from our open testing link:
+  <br><br>
+  👉 <a href="AQUI_TU_LINK_DE_LA_PRUEBA_ABIERTA" target="_blank" style="font-weight:bold;">Update to the new app version on Google Play</a>
+  <br><br>
+  📌 Please complete this process before updating to avoid losing your important notes.
+</p>
+
+<script src="https://sql.js.org/dist/sql-wasm.js"></script>
+<script>
+let contadorNotas = 0;
+const LIMITE_NOTAS = 500;
+
+function agregarNota() {
+  if (contadorNotas >= LIMITE_NOTAS) {
+    alert("You’ve reached the 500 notes limit.");
+    return;
+  }
+
+  contadorNotas++;
+  const div = document.createElement('div');
+  div.className = 'nota';
+  div.innerHTML = `
+    <h3>Note ${contadorNotas}</h3>
+    <input type="text" placeholder="Note title" id="titulo${contadorNotas}">
+    <textarea placeholder="Note content" rows="4" id="contenido${contadorNotas}"></textarea>
+  `;
+  document.getElementById('contenedorNotas').appendChild(div);
+}
+
+async function generarRespaldo() {
+  const SQL = await initSqlJs({ locateFile: file => `https://sql.js.org/dist/${file}` });
+  const db = new SQL.Database();
+  db.run("CREATE TABLE notes (title TEXT, body TEXT, updated_at INTEGER);");
+
+  const now = Date.now();
+  let notasInsertadas = 0;
+
+  for (let i = 1; i <= contadorNotas; i++) {
+    const tituloInput = document.getElementById(`titulo${i}`);
+    const contenidoInput = document.getElementById(`contenido${i}`);
+
+    if (!contenidoInput || !contenidoInput.value.trim()) continue;
+
+    let titulo = "Untitled";
+    if (tituloInput && tituloInput.value.trim()) {
+      titulo = tituloInput.value.trim();
+    }
+
+    const contenido = contenidoInput.value.trim();
+
+    db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [titulo, contenido, now + i]);
+    notasInsertadas++;
+  }
+
+  if (notasInsertadas === 0) {
+    alert("Please enter at least one note with content.");
+    return;
+  }
+
+  const binaryArray = db.export();
+  const blob = new Blob([binaryArray], { type: 'application/octet-stream' });
+  const enlace = document.createElement('a');
+  enlace.href = URL.createObjectURL(blob);
+  enlace.download = 'respaldo_blocdenotas.db';
+  enlace.click();
+}
+
+agregarNota();
+</script>
+
+</body>
+</html>
