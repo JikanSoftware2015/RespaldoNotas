@@ -2,64 +2,97 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Respaldar Notas a blocdenotas_backup.db</title>
+  <title>Recuperación y Respaldo de Notas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; max-width: 800px; margin: auto; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; background: #f5f5f5; color: #333; margin: 20px; }
+    h1, h2, h3 { text-align: center; }
+    .section { background: #fff; padding: 20px; margin: 20px auto; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 900px; }
+    p, li { font-size: 18px; }
+    .btn { display: inline-block; padding: 12px 20px; margin: 15px 0; background: #007BFF; color: #fff; border-radius: 8px; text-decoration: none; cursor: pointer; }
+    .btn:hover { background: #0056b3; }
+    #video-container { display: none; margin-top: 20px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; }
+    #video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px; }
     input, textarea { width: 100%; padding: 14px; margin: 8px 0 18px; font-size: 18px; border-radius: 6px; border: 1px solid #ccc; }
     button { display: block; width: 100%; margin: 12px 0; padding: 14px; font-size: 18px; border: none; background: #0066cc; color: #fff; border-radius: 8px; cursor: pointer; }
     button:hover { background: #004999; }
     .nota { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #fff; border-radius: 10px; }
-    h2 { font-size: 26px; margin-bottom: 20px; }
-    h3 { font-size: 22px; margin: 0 0 15px 0; }
-    p { font-size: 18px; margin-bottom: 20px; }
-    a { color: #0066cc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+
+    /* Mejoras responsivas */
+    @media (max-width: 600px) {
+      body { margin: 10px; }
+      p, li { font-size: 16px; }
+      input, textarea, button { font-size: 16px; padding: 12px; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 20px; }
+      h3 { font-size: 18px; }
+    }
   </style>
 </head>
 <body>
 
-<h2>Generar respaldo blocdenotas_backup.db</h2>
+  <h1>Recuperación de Notas</h1>
 
-<p style="text-align:center; margin-bottom:20px;">
-  <a href="respaldarNotasSQLite_en.html" style="font-size:18px;">View English version</a>
-</p>
+  <div class="section">
+    <h2>Explicación</h2>
+    <p>Hubo robo de código, un supuesto amigo me traicionó, me robó dinero y el código. Me perjudicó y nos perjudicó a todos. En las bases de datos sin el código no se puede hacer una migración, por eso hice un formulario para que guardaran sus notas. Dejé las instrucciones en el menú pero algunos usuarios no lo leyeron. Todos me culpan porque es muy fácil culpar y juzgar, pero yo también fui una víctima de un ser despreciable que dijo ser mi amigo.</p>
+  </div>
 
+  <div class="section">
+    <h2>Instrucciones - Primera Parte</h2>
+    <p>Son dos partes y esta es la primera. Cuando la hagas deberías tener tus notas en la versión anterior.</p>
+    <p>Ni yo ni nadie tenemos acceso a sus notas, no tiene nada que ver con el código de programación. Sus notas siempre están en sus dispositivos móviles o en sus cuentas de Google Drive. No puedes desinstalar la aplicación hasta que ya tengas tus notas. Si la desinstalaste antes, este proceso ya no funciona.</p>
 
-<p style="text-align:center; margin-bottom:20px;">
-  📖 <a href="instrucciones_respaldo.html" style="font-size:18px;">📑 Ver instrucciones paso a paso</a>
-</p>
+    <h3>Pasos:</h3>
+    <ol>
+      <li>Debes ingresar al enlace de prueba.</li>
+      <li>Luego darle en convertirte en tester.</li>
+      <li>Clic en el primer download que ves.</li>
+      <li>Clic en actualizar, debe decir actualizar; si no, algo hiciste mal.</li>
+    </ol>
 
-<p style="text-align:center; margin-top:10px;">
-  🎥 <a href="https://drive.google.com/file/d/11_EMiYrBuWE4wIyId6kk007GQIuACt84/view?usp=drive_link" target="_blank">
-    Ver video explicativo del respaldo
-  </a>
-</p>
+    <p><a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" class="btn" target="_blank">Ir al enlace de prueba</a></p>
 
-<p>🙏 Hola. Antes que nada, quiero pedirte una disculpa por este proceso. Tras el robo del código original de la aplicación, me he esforzado en crear una nueva versión para que nadie pierda sus notas.
-<br><br>
-Esta herramienta es una solución temporal para que puedas respaldar manualmente tus notas. Solo tendrás que hacerlo una vez y luego podrás restaurarlas en la nueva versión de la app.
-<br><br>
-Por favor, copia cada una de tus notas desde la app antigua, pega aquí el título y el contenido, y repite usando el botón <strong>+ Agregar otra nota</strong>.
-<br><br>
-Cuando termines, toca en <strong>📥 Descargar respaldo_blocdenotas.db</strong> para guardar tu respaldo, y luego desde la nueva app podrás restaurarlo desde la opción: Abrir blocdenotas.db que está en configuración.
-<br><br>
-Gracias por tu comprensión y confianza 🙏💙.</p>
+    <button class="btn" onclick="document.getElementById('video-container').style.display='block'">Ver Video Explicativo</button>
+    <div id="video-container">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+    </div>
+  </div>
 
-<div id="contenedorNotas"></div>
+  <div class="section">
+    <h2>Segunda Parte</h2>
+    <p>Después de recuperar tus notas, por favor haz copias de seguridad para evitar posibles errores. Debes usar el formulario que he creado para eso.</p>
+    <p>Después de guardar tus notas, ve a la aplicación en Play Store y deja de ser tester para instalar la versión nueva, ya que esta es temporal. Recuerda: haz esto solo después de haber hecho copia de seguridad.</p>
+    <p>La opción más recomendada es usar el formulario de respaldo. Puede ser lento, pero es la más segura. Esta versión antigua es temporal y hay plazo hasta finales de septiembre. Yo estaré pendiente para responder máximo en uno o dos días.</p>
+    <p>Me alegro mucho por los usuarios que ya recuperaron sus notas 🙏 Bendiciones. Y recuerda calificarme bien en la versión de prueba y en la versión nueva, gracias.</p>
+  </div>
 
-<button onclick="agregarNota()">+ Agregar otra nota</button>
-<button onclick="generarRespaldo()">📥 Descargar respaldo_blocdenotas.db</button>
+  <div class="section">
+    <h2>Generar respaldo blocdenotas_backup.db</h2>
 
-<p style="text-align:center; font-size:18px; margin-top:30px;">
-  📢 <strong>Importante:</strong> Si en la versión de tu aplicación actual no has podido respaldar tus notas, es fundamental que utilices este formulario cuanto antes para guardarlas en un archivo.
-  <br><br>
-  Una vez descargado el respaldo en tu teléfono 📱, podrás actualizar a la nueva versión de la app desde nuestro enlace especial.
-  <br><br>
-  👉 <a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" target="_blank" style="font-weight:bold;">Actualizar a la nueva versión desde Google Play</a>
-  <br><br>
-  📌 Por favor, realiza este proceso antes de actualizar, para que no pierdas ninguna nota importante.
-</p>
+    <p style="text-align:center; margin-bottom:20px;">
+      <a href="respaldarNotasSQLite_en.html" style="font-size:18px;">View English version</a>
+    </p>
+
+    <p style="text-align:center; margin-bottom:20px;">
+      📖 <a href="instrucciones_respaldo.html" style="font-size:18px;">📑 Ver instrucciones paso a paso</a>
+    </p>
+
+    <div id="contenedorNotas"></div>
+
+    <button onclick="agregarNota()">+ Agregar otra nota</button>
+    <button onclick="generarRespaldo()">📥 Descargar respaldo_blocdenotas.db</button>
+
+    <p style="text-align:center; font-size:18px; margin-top:30px;">
+      📢 <strong>Importante:</strong> Si en la versión de tu aplicación actual no has podido respaldar tus notas, es fundamental que utilices este formulario cuanto antes para guardarlas en un archivo.
+      <br><br>
+      Una vez descargado el respaldo en tu teléfono 📱, podrás actualizar a la nueva versión de la app desde nuestro enlace especial.
+      <br><br>
+      👉 <a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" target="_blank" style="font-weight:bold;">Actualizar a la nueva versión desde Google Play</a>
+      <br><br>
+      📌 Por favor, realiza este proceso antes de actualizar, para que no pierdas ninguna nota importante.
+    </p>
+  </div>
 
 <script src="https://sql.js.org/dist/sql-wasm.js"></script>
 <script>
@@ -126,4 +159,3 @@ agregarNota();
 
 </body>
 </html>
-
