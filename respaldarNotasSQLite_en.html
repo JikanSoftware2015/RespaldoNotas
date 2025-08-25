@@ -2,59 +2,97 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Backup Notes to blocdenotas_backup.db</title>
+  <title>Notes Recovery and Backup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; max-width: 800px; margin: auto; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; background: #f5f5f5; color: #333; margin: 20px; }
+    h1, h2, h3 { text-align: center; }
+    .section { background: #fff; padding: 20px; margin: 20px auto; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 900px; }
+    p, li { font-size: 18px; }
+    .btn { display: inline-block; padding: 12px 20px; margin: 15px 0; background: #007BFF; color: #fff; border-radius: 8px; text-decoration: none; cursor: pointer; }
+    .btn:hover { background: #0056b3; }
+    #video-container { display: none; margin-top: 20px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; }
+    #video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px; }
     input, textarea { width: 100%; padding: 14px; margin: 8px 0 18px; font-size: 18px; border-radius: 6px; border: 1px solid #ccc; }
     button { display: block; width: 100%; margin: 12px 0; padding: 14px; font-size: 18px; border: none; background: #0066cc; color: #fff; border-radius: 8px; cursor: pointer; }
     button:hover { background: #004999; }
     .nota { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #fff; border-radius: 10px; }
-    h2 { font-size: 26px; margin-bottom: 20px; }
-    h3 { font-size: 22px; margin: 0 0 15px 0; }
-    p { font-size: 18px; margin-bottom: 20px; }
-    a { color: #0066cc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+
+    /* Responsive improvements */
+    @media (max-width: 600px) {
+      body { margin: 10px; }
+      p, li { font-size: 16px; }
+      input, textarea, button { font-size: 16px; padding: 12px; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 20px; }
+      h3 { font-size: 18px; }
+    }
   </style>
 </head>
 <body>
 
-<p style="text-align:center; margin-bottom:20px;">
-  <a href="./" style="font-size:18px;">Ver versión en Español</a>
-</p>
+  <p style="text-align:center; margin-bottom:20px;">
+    <a href="respaldarNotasSQLite.html" class="btn">Ver versión en español</a>
+  </p>
 
-<h2>Generate blocdenotas_backup.db</h2>
+  <h1>Notes Recovery</h1>
 
-<p style="text-align:center; margin-top:10px;">
-  🎥 <a href="https://drive.google.com/file/d/11_EMiYrBuWE4wIyId6kk007GQIuACt84/view?usp=drive_link" target="_blank">
-    Watch video
-  </a>
-</p>
+  <div class="section">
+    <h2>Explanation</h2>
+    <p>There was a code theft. A supposed friend betrayed me, stole my money and my code. He harmed me and harmed all of us. Without the code, a migration cannot be done in the databases, that’s why I made this form so you can save your notes. I left the instructions in the menu but some users did not read them. Everyone blames me because it is easy to blame and judge, but I was also a victim of a despicable person who pretended to be my friend.</p>
+  </div>
 
-<p>🙏 Hello! First, I sincerely apologize for this process. After the theft of the original app’s code, I’ve worked hard to create a new version so no one loses their notes.
-<br><br>
-This tool is a temporary solution for you to manually back up your notes. You’ll only need to do this once and then restore them in the new app.
-<br><br>
-Please copy each note from your old app, paste the title and content here, and use the <strong>+ Add another note</strong> button to add more.
-<br><br>
-When you’re done, click <strong>📥 Download respaldo_blocdenotas.db</strong> to save your backup, and later use the: Open blocdenotas.db option in the new app to recover them in settings.
-<br><br>
-Thank you so much for your trust and understanding 🙏💙.</p>
+  <div class="section">
+    <h2>Instructions - First Part</h2>
+    <p>There are two parts and this is the first one. When you complete it, you should have your notes in the previous version.</p>
+    <p>Neither I nor anyone else has access to your notes, it has nothing to do with the programming code. Your notes are always on your mobile devices or in your Google Drive accounts. You cannot uninstall the app until you already have your notes. If you uninstalled it before, this process will not work anymore.</p>
 
-<div id="contenedorNotas"></div>
+    <h3>Steps:</h3>
+    <ol>
+      <li>Enter the test link.</li>
+      <li>Then click on “Become a tester”.</li>
+      <li>Click on the first download you see.</li>
+      <li>Click on update, it must say update; if not, something went wrong.</li>
+    </ol>
 
-<button onclick="agregarNota()">+ Add another note</button>
-<button onclick="generarRespaldo()">📥 Download respaldo_blocdenotas.db</button>
+    <p><a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" class="btn" target="_blank">Go to test link</a></p>
 
-<p style="text-align:center; font-size:18px; margin-top:30px;">
-  📢 <strong>Important:</strong> If you couldn’t back up your notes in the current app version, it’s crucial you use this tool as soon as possible to save them in a file.
-  <br><br>
-  After downloading the backup file to your phone 📱, you can update to the new app version from our open testing link:
-  <br><br>
-  👉 <a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" target="_blank" style="font-weight:bold;">Update to the new app version on Google Play</a>
-  <br><br>
-  📌 Please complete this process before updating to avoid losing your important notes.
-</p>
+    <button class="btn" onclick="document.getElementById('video-container').style.display='block'">Watch Explanatory Video</button>
+    <div id="video-container">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Second Part</h2>
+    <p>After recovering your notes, please make backups to avoid possible errors. You must use the form I created for that.</p>
+    <p>After saving your notes, go to the app in the Play Store and stop being a tester to install the new version, since this one is temporary. Remember: do this only after having made a backup.</p>
+    <p>The most recommended option is to use the backup form. One by one may be slow, but it is the safest. This old version is temporary and the deadline is until the end of September. I will be attentive to answer within one or two days at most.</p>
+    <p>I am very happy for the users who have already recovered their notes 🙏 Blessings. And please remember to rate me well in the test version and in the new version, thank you.</p>
+  </div>
+
+  <div class="section">
+    <h2>Generate backup blocdenotas_backup.db</h2>
+
+    <p style="text-align:center; margin-bottom:20px;">
+      <a href="instrucciones_respaldo.html" style="font-size:18px;">📑 View step-by-step instructions</a>
+    </p>
+
+    <div id="contenedorNotas"></div>
+
+    <button onclick="agregarNota()">+ Add another note</button>
+    <button onclick="generarRespaldo()">📥 Download respaldo_blocdenotas.db</button>
+
+    <p style="text-align:center; font-size:18px; margin-top:30px;">
+      📢 <strong>Important:</strong> If in your current app version you have not been able to back up your notes, it is essential that you use this form as soon as possible to save them in a file.
+      <br><br>
+      Once the backup has been downloaded to your phone 📱, you will be able to update to the new version of the app from our special link.
+      <br><br>
+      👉 <a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" target="_blank" style="font-weight:bold;">Update to the new version from Google Play</a>
+      <br><br>
+      📌 Please complete this process before updating so you don’t lose any important notes.
+    </p>
+  </div>
 
 <script src="https://sql.js.org/dist/sql-wasm.js"></script>
 <script>
@@ -63,7 +101,7 @@ const LIMITE_NOTAS = 500;
 
 function agregarNota() {
   if (contadorNotas >= LIMITE_NOTAS) {
-    alert("You’ve reached the 500 notes limit.");
+    alert("You have reached the limit of 500 notes.");
     return;
   }
 
@@ -104,7 +142,7 @@ async function generarRespaldo() {
   }
 
   if (notasInsertadas === 0) {
-    alert("Please enter at least one note with content.");
+    alert("You must enter at least one note with content.");
     return;
   }
 
