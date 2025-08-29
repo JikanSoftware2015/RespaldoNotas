@@ -18,6 +18,16 @@
     button:hover { background: #004999; }
     .nota { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #fff; border-radius: 10px; }
 
+    /* Caja de info */
+    .info-box {
+      background: #e6f0ff;
+      border-left: 6px solid #0066cc;
+      padding: 15px;
+      margin: 15px 0 25px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
     /* Mejoras responsivas */
     @media (max-width: 600px) {
       body { margin: 10px; }
@@ -59,13 +69,12 @@
 
     <button class="btn" onclick="document.getElementById('video-container').style.display='block'">Ver Video Explicativo</button>
     <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
-  <iframe src="https://www.youtube.com/embed/ZwUyATVof90" 
-          frameborder="0" 
-          allowfullscreen 
-          style="position:absolute;top:0;left:0;width:100%;height:100%;">
-  </iframe>
-</div>
-
+      <iframe src="https://www.youtube.com/embed/ZwUyATVof90?rel=0&modestbranding=1&showinfo=0"
+              frameborder="0"
+              allowfullscreen
+              style="position:absolute;top:0;left:0;width:100%;height:100%;">
+      </iframe>
+    </div>
   </div>
 
   <div class="section">
@@ -78,6 +87,11 @@
 
   <div class="section">
     <h2>Generar respaldo blocdenotas_backup.db</h2>
+
+    <div class="info-box">
+      ✨ <strong>Tus notas se guardarán automáticamente aquí</strong> mientras trabajas, incluso si cierras la página y vuelves más tarde.<br>
+      ⚠️ <strong>Importante:</strong> si borras la caché del navegador, estas notas se perderán. Asegúrate de <u>descargar el archivo de respaldo</u> antes de hacerlo.
+    </div>
     
     <div id="contenedorNotas"></div>
 
@@ -100,7 +114,18 @@
 let contadorNotas = 0;
 const LIMITE_NOTAS = 500;
 
-function agregarNota() {
+// Cargar notas guardadas en localStorage
+window.onload = function() {
+  const guardadas = localStorage.getItem("notas");
+  if (guardadas) {
+    const notas = JSON.parse(guardadas);
+    notas.forEach(n => agregarNota(n.titulo, n.contenido));
+  } else {
+    agregarNota(); // al menos una vacía
+  }
+};
+
+function agregarNota(titulo="", contenido="") {
   if (contadorNotas >= LIMITE_NOTAS) {
     alert("Has alcanzado el límite de 500 notas.");
     return;
@@ -111,10 +136,30 @@ function agregarNota() {
   div.className = 'nota';
   div.innerHTML = `
     <h3>Nota ${contadorNotas}</h3>
-    <input type="text" placeholder="Título de la nota" id="titulo${contadorNotas}">
-    <textarea placeholder="Contenido de la nota" rows="4" id="contenido${contadorNotas}"></textarea>
+    <input type="text" placeholder="Título de la nota" id="titulo${contadorNotas}" value="${titulo}">
+    <textarea placeholder="Contenido de la nota" rows="4" id="contenido${contadorNotas}">${contenido}</textarea>
   `;
   document.getElementById('contenedorNotas').appendChild(div);
+
+  // Detectar cambios y guardar
+  div.querySelectorAll("input, textarea").forEach(el => {
+    el.addEventListener("input", guardarNotasLocal);
+  });
+}
+
+function guardarNotasLocal() {
+  let notas = [];
+  for (let i = 1; i <= contadorNotas; i++) {
+    const tituloInput = document.getElementById(`titulo${i}`);
+    const contenidoInput = document.getElementById(`contenido${i}`);
+    if (tituloInput || contenidoInput) {
+      notas.push({
+        titulo: tituloInput ? tituloInput.value : "",
+        contenido: contenidoInput ? contenidoInput.value : ""
+      });
+    }
+  }
+  localStorage.setItem("notas", JSON.stringify(notas));
 }
 
 async function generarRespaldo() {
@@ -128,7 +173,6 @@ async function generarRespaldo() {
   for (let i = 1; i <= contadorNotas; i++) {
     const tituloInput = document.getElementById(`titulo${i}`);
     const contenidoInput = document.getElementById(`contenido${i}`);
-
     if (!contenidoInput || !contenidoInput.value.trim()) continue;
 
     let titulo = "Sin título";
@@ -137,7 +181,6 @@ async function generarRespaldo() {
     }
 
     const contenido = contenidoInput.value.trim();
-
     db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [titulo, contenido, now + i]);
     notasInsertadas++;
   }
@@ -153,13 +196,12 @@ async function generarRespaldo() {
   enlace.href = URL.createObjectURL(blob);
   enlace.download = 'respaldo_blocdenotas.db';
   enlace.click();
-}
 
-agregarNota();
+  // Borrar notas del almacenamiento local después de descargar
+  localStorage.removeItem("notas");
+  alert("✅ Respaldo descargado y borrado del almacenamiento temporal.");
+}
 </script>
 
 </body>
 </html>
-
-
-
