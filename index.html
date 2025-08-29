@@ -200,8 +200,10 @@ async function generarRespaldo() {
   // Borrar notas del almacenamiento local después de descargar
   localStorage.removeItem("notas");
   alert("✅ Respaldo descargado y borrado del almacenamiento temporal.");
+  location.reload();
 }
 </script>
 
 </body>
 </html>
+
