@@ -11,12 +11,10 @@
     p, li { font-size: 18px; }
     .btn { display: inline-block; padding: 12px 20px; margin: 15px 0; background: #007BFF; color: #fff; border-radius: 8px; text-decoration: none; cursor: pointer; }
     .btn:hover { background: #0056b3; }
-    #video-container { display: none; margin-top: 20px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; }
-    #video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px; }
     input, textarea { width: 100%; padding: 14px; margin: 8px 0 18px; font-size: 18px; border-radius: 6px; border: 1px solid #ccc; }
     button { display: block; width: 100%; margin: 12px 0; padding: 14px; font-size: 18px; border: none; background: #0066cc; color: #fff; border-radius: 8px; cursor: pointer; }
     button:hover { background: #004999; }
-    .nota { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #fff; border-radius: 10px; }
+    .note { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #fff; border-radius: 10px; }
 
     /* Responsive improvements */
     @media (max-width: 600px) {
@@ -31,135 +29,114 @@
 </head>
 <body>
 
-  <p style="text-align:center; margin-bottom:20px;">
-    <a href="index.html" class="btn">Ver versión en español</a>
-  </p>
-
-  <h1>Notes Recovery</h1>
+  <h1>Notes Backup</h1>
 
   <div class="section">
-    <h2>Explanation</h2>
-    <p>There was a code theft. A supposed friend betrayed me, stole my money and my code. He harmed me and harmed all of us. Without the code, a migration cannot be done in the databases, that’s why I made this form so you can save your notes. I left the instructions in the menu but some users did not read them. Everyone blames me because it is easy to blame and judge, but I was also a victim of a despicable person who pretended to be my friend.</p>
-  </div>
-
-  <div class="section">
-    <h2>Instructions - First Part</h2>
-    <p>There are two parts and this is the first one. When you complete it, you should have your notes in the previous version.</p>
-    <p>Neither I nor anyone else has access to your notes, it has nothing to do with the programming code. Your notes are always on your mobile devices or in your Google Drive accounts. You cannot uninstall the app until you already have your notes. If you uninstalled it before, this process will not work anymore.</p>
-
-    <h3>Steps:</h3>
-    <ol>
-      <li>Enter the test link.</li>
-      <li>Then click on “Become a tester”.</li>
-      <li>Click on the first download you see.</li>
-      <li>Click on update, it must say update; if not, something went wrong.</li>
-    </ol>
-
-    <p><a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" class="btn" target="_blank">Go to test link</a></p>
-
-    <button class="btn" onclick="document.getElementById('video-container').style.display='block'">Watch Explanatory Video</button>
-    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
-  <iframe src="https://www.youtube.com/embed/ZwUyATVof90" 
-          frameborder="0" 
-          allowfullscreen 
-          style="position:absolute;top:0;left:0;width:100%;height:100%;">
-  </iframe>
-</div>
-
-  </div>
-
-  <div class="section">
-    <h2>Second Part</h2>
-    <p>After recovering your notes, please make backups to avoid possible errors. You must use the form I created for that.</p>
-    <p>After saving your notes, go to the app in the Play Store and stop being a tester to install the new version, since this one is temporary. Remember: do this only after having made a backup.</p>
-    <p>The most recommended option is to use the backup form. One by one may be slow, but it is the safest. This old version is temporary and the deadline is until the end of September. I will be attentive to answer within one or two days at most.</p>
-    <p>I am very happy for the users who have already recovered their notes 🙏 Blessings. And please remember to rate me well in the test version and in the new version, thank you.</p>
-  </div>
-
-  <div class="section">
-    <h2>Generate backup blocdenotas_backup.db</h2>
-
-    <p style="text-align:center; margin-bottom:20px;">
-      <a href="instrucciones_respaldo.html" style="font-size:18px;">📑 View step-by-step instructions</a>
+    <h2>Generate backup file: blocdenotas_backup.db</h2>
+    <p style="text-align:center; font-size:16px; margin-bottom:20px; color:#555;">
+      📝 Your notes will be temporarily saved here until you download the file.<br>
+      If you clear your browser cache, they will be lost.<br>
+      But you can leave and come back later to continue without problems.
     </p>
 
-    <div id="contenedorNotas"></div>
+    <div id="notesContainer"></div>
 
-    <button onclick="agregarNota()">+ Add another note</button>
-    <button onclick="generarRespaldo()">📥 Download respaldo_blocdenotas.db</button>
-
-    <p style="text-align:center; font-size:18px; margin-top:30px;">
-      📢 <strong>Important:</strong> If in your current app version you have not been able to back up your notes, it is essential that you use this form as soon as possible to save them in a file.
-      <br><br>
-      Once the backup has been downloaded to your phone 📱, you will be able to update to the new version of the app from our special link.
-      <br><br>
-      👉 <a href="https://play.google.com/apps/testing/jikansoftware.com.blocdenotas" target="_blank" style="font-weight:bold;">Update to the new version from Google Play</a>
-      <br><br>
-      📌 Please complete this process before updating so you don’t lose any important notes.
-    </p>
+    <button onclick="addNote()">+ Add another note</button>
+    <button onclick="generateBackup()">📥 Download backup_blocdenotas.db</button>
   </div>
 
 <script src="https://sql.js.org/dist/sql-wasm.js"></script>
 <script>
-let contadorNotas = 0;
-const LIMITE_NOTAS = 500;
+let noteCounter = 0;
+const NOTES_LIMIT = 500;
 
-function agregarNota() {
-  if (contadorNotas >= LIMITE_NOTAS) {
+// Load saved notes from localStorage on page load
+window.onload = () => {
+  const savedNotes = JSON.parse(localStorage.getItem("notes")) || [];
+  savedNotes.forEach(note => {
+    addNote(note.title, note.content);
+  });
+};
+
+function saveToLocalStorage() {
+  const notes = [];
+  for (let i = 1; i <= noteCounter; i++) {
+    const titleInput = document.getElementById(`title${i}`);
+    const contentInput = document.getElementById(`content${i}`);
+    if (!contentInput) continue;
+    notes.push({
+      title: titleInput.value,
+      content: contentInput.value
+    });
+  }
+  localStorage.setItem("notes", JSON.stringify(notes));
+}
+
+function addNote(title = "", content = "") {
+  if (noteCounter >= NOTES_LIMIT) {
     alert("You have reached the limit of 500 notes.");
     return;
   }
 
-  contadorNotas++;
+  noteCounter++;
   const div = document.createElement('div');
-  div.className = 'nota';
+  div.className = 'note';
   div.innerHTML = `
-    <h3>Note ${contadorNotas}</h3>
-    <input type="text" placeholder="Note title" id="titulo${contadorNotas}">
-    <textarea placeholder="Note content" rows="4" id="contenido${contadorNotas}"></textarea>
+    <h3>Note ${noteCounter}</h3>
+    <input type="text" placeholder="Note title" id="title${noteCounter}" value="${title}">
+    <textarea placeholder="Note content" rows="4" id="content${noteCounter}">${content}</textarea>
   `;
-  document.getElementById('contenedorNotas').appendChild(div);
+  document.getElementById('notesContainer').appendChild(div);
+
+  // Auto-save when typing
+  document.getElementById(`title${noteCounter}`).addEventListener("input", saveToLocalStorage);
+  document.getElementById(`content${noteCounter}`).addEventListener("input", saveToLocalStorage);
 }
 
-async function generarRespaldo() {
+async function generateBackup() {
   const SQL = await initSqlJs({ locateFile: file => `https://sql.js.org/dist/${file}` });
   const db = new SQL.Database();
   db.run("CREATE TABLE notes (title TEXT, body TEXT, updated_at INTEGER);");
 
   const now = Date.now();
-  let notasInsertadas = 0;
+  let insertedNotes = 0;
 
-  for (let i = 1; i <= contadorNotas; i++) {
-    const tituloInput = document.getElementById(`titulo${i}`);
-    const contenidoInput = document.getElementById(`contenido${i}`);
+  for (let i = 1; i <= noteCounter; i++) {
+    const titleInput = document.getElementById(`title${i}`);
+    const contentInput = document.getElementById(`content${i}`);
 
-    if (!contenidoInput || !contenidoInput.value.trim()) continue;
+    if (!contentInput || !contentInput.value.trim()) continue;
 
-    let titulo = "Untitled";
-    if (tituloInput && tituloInput.value.trim()) {
-      titulo = tituloInput.value.trim();
+    let title = "Untitled";
+    if (titleInput && titleInput.value.trim()) {
+      title = titleInput.value.trim();
     }
 
-    const contenido = contenidoInput.value.trim();
+    const content = contentInput.value.trim();
 
-    db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [titulo, contenido, now + i]);
-    notasInsertadas++;
+    db.run("INSERT INTO notes (title, body, updated_at) VALUES (?, ?, ?);", [title, content, now + i]);
+    insertedNotes++;
   }
 
-  if (notasInsertadas === 0) {
+  if (insertedNotes === 0) {
     alert("You must enter at least one note with content.");
     return;
   }
 
   const binaryArray = db.export();
   const blob = new Blob([binaryArray], { type: 'application/octet-stream' });
-  const enlace = document.createElement('a');
-  enlace.href = URL.createObjectURL(blob);
-  enlace.download = 'respaldo_blocdenotas.db';
-  enlace.click();
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'backup_blocdenotas.db';
+  link.click();
+
+  // Clear localStorage and reload page
+  localStorage.removeItem("notes");
+  alert("✅ Backup downloaded and ready for new version.");
+  location.reload();
 }
 
-agregarNota();
+addNote();
 </script>
 
 </body>
